@@ -5,6 +5,7 @@ from connectors.motorola import MotorolaConnector
 from connectors.honor import HonorConnector
 from connectors.xiaomi import XiaomiConnector
 from mailer import Mailer
+from notifier import Notifier
 
 class UpdateChecker:
     def __init__(self, db: Database):
@@ -36,8 +37,12 @@ class UpdateChecker:
         report_id, changes = self.db.save_device_snapshot(all_devices)
         print(f"[UpdateChecker] Kontrola dokončena. Report ID #{report_id}. Nalezeno {len(changes)} změn.")
 
-        # Email dispatch if enabled or forced
         settings = self.db.get_settings()
+        
+        # Trigger native Windows Toast & Webhook Notifications (Zero Password)
+        Notifier.notify_changes(changes, settings)
+
+        # Email dispatch if enabled or forced
         email_msg = ""
         if force_send_email or settings.get("auto_send_email") == "1":
             success, mail_res = Mailer.send_report_email(settings, changes, len(all_devices))

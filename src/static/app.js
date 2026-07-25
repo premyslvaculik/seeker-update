@@ -280,6 +280,7 @@ async function loadSettings() {
 async function saveSettings(e) {
     e.preventDefault();
     const data = {
+        webhook_url: document.getElementById('webhook_url') ? document.getElementById('webhook_url').value.trim() : '',
         smtp_host: document.getElementById('smtp_host').value.trim(),
         smtp_port: document.getElementById('smtp_port').value.trim(),
         smtp_user: document.getElementById('smtp_user').value.trim(),

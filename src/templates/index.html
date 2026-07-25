@@ -90,9 +90,27 @@
         <!-- TAB 3: SETTINGS -->
         <div id="tab-settings" class="tab-pane">
             <div class="settings-card">
-                <h3>⚙️ Nastavení E-mailových notifikací</h3>
+                <h3>🔔 Notifikace BEZ HESLA (Bezpečné a lokální)</h3>
+                <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 0.9rem;">
+                    Aplikace automaticky zobrazuje **systémové notifikace ve Windows** (dole vpravo) při každém zjištění změn nebo EOL zařízení – **zcela bez nutnosti zadávat jakékoliv heslo!**
+                </p>
+
+                <div class="gmail-box" style="background: rgba(16, 185, 129, 0.1); border-color: #10b981;">
+                    <h4 style="color: #34d399;">📱 Push notifikace na telefon (ntfy.sh / Discord / Slack)</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                        Chcete dostávat upozornění na telefon bez zadávání e-mailového hesla? Stačí zadat např. bezplatnou URL adresu z <b>ntfy.sh</b> nebo <b>Discord Webhook</b>.
+                    </p>
+                    <div class="form-group">
+                        <label style="color: var(--text-main);">Webhook URL (Volitelné):</label>
+                        <input type="text" id="webhook_url" class="form-control" placeholder="např. https://ntfy.sh/vase-moje-notifikace-telefony">
+                    </div>
+                </div>
+
+                <hr style="border-color: var(--border-color); margin: 25px 0;">
+
+                <h3>⚙️ Volitelné nastavení E-mailu (SMTP)</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
-                    Nastavte SMTP server pro zasílání denních přehledů změn v podporovaných mobilních zařízeních.
+                    Pokud preferujete zasílání e-mailů, můžete si zde nastavit SMTP server.
                 </p>
 
                 <!-- Gmail Quick Setup Wizard -->
