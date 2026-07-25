@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Seeker - Sledování podpory mobilů (EU)</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <span style="font-size: 1.8rem;">📱</span>
+            <h1>Update Seeker</h1>
+            <span style="font-size: 0.8rem; background: #3b82f6; padding: 2px 8px; border-radius: 10px;">EU Market</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-primary" id="btn-check-now" onclick="runCheckNow()">
+                <span>⚡ Spustit kontrolu nyní</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Nav Tabs -->
+    <nav class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('tab-devices', this)">
+            <span>📱</span> Podporovaná zařízení
+        </div>
+        <div class="nav-tab" onclick="switchTab('tab-history', this)">
+            <span>📜</span> Historie reportů & HTML Export
+        </div>
+        <div class="nav-tab" onclick="switchTab('tab-settings', this)">
+            <span>⚙️</span> Nastavení & Gmail
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- TAB 1: DEVICES -->
+        <div id="tab-devices" class="tab-pane active">
+
+            <!-- Manufacturer Brand Pills -->
+            <div class="brands-row" id="brands-row">
+                <!-- Dynamically loaded brand pills -->
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="filter-bar">
+                <input type="text" id="search-input" class="search-input" placeholder="🔍 Hledat konkrétní model (např. S24, Pixel 8, Moto G84)..." oninput="fetchDevices()">
+                <button class="btn btn-outline" onclick="resetFilters()">Zobrazit vše</button>
+            </div>
+
+            <!-- Device Cards Grid -->
+            <div class="devices-grid" id="devices-grid">
+                <!-- Dynamically rendered device cards -->
+            </div>
+        </div>
+
+        <!-- TAB 2: HISTORY -->
+        <div id="tab-history" class="tab-pane">
+            <div class="history-layout">
+                <!-- Left: Reports list -->
+                <div class="history-list" id="reports-list">
+                    <!-- Dynamically rendered report items -->
+                </div>
+
+                <!-- Right: Selected Report Diff -->
+                <div class="report-detail-card">
+                    <h3 id="report-detail-title">Detail vybrané kontroly</h3>
+                    <p id="report-detail-summary" style="color: var(--text-muted); margin-bottom: 15px;">Vyberte report ze seznamu vlevo.</p>
+
+                    <div id="changes-container">
+                        <!-- Changes rendered here -->
+                    </div>
+
+                    <!-- Copy HTML Snippet Tool -->
+                    <div class="html-snippet-box" id="html-box" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="color: #38bdf8;">📋 HTML Report pro e-mail/web (&lt;ul&gt;&lt;li&gt;)</h4>
+                            <button class="btn btn-primary" onclick="copyHtmlSnippet()">Kopírovat HTML kód</button>
+                        </div>
+                        <pre id="html-snippet-code"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SETTINGS -->
+        <div id="tab-settings" class="tab-pane">
+            <div class="settings-card">
+                <h3>⚙️ Nastavení E-mailových notifikací</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                    Nastavte SMTP server pro zasílání denních přehledů změn v podporovaných mobilních zařízeních.
+                </p>
+
+                <!-- Gmail Quick Setup Wizard -->
+                <div class="gmail-box">
+                    <h4>💡 Chytré napojení pro Google E-mail (Gmail)</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                        Používáte Gmail? Není potřeba řešit ručně servery a porty! Stačí zadat Váš Gmail a <b>Heslo aplikace (App Password)</b> z Google účtu.
+                    </p>
+                    <button class="btn btn-outline" style="font-size: 0.8rem;" onclick="applyGmailPresets()">
+                        ⚡ Použít přednastavení pro Gmail
+                    </button>
+                </div>
+
+                <form id="settings-form" onsubmit="saveSettings(event)">
+                    <div class="form-group">
+                        <label>SMTP Server (Host):</label>
+                        <input type="text" id="smtp_host" class="form-control" placeholder="např. smtp.gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>SMTP Port:</label>
+                        <input type="text" id="smtp_port" class="form-control" placeholder="587">
+                    </div>
+                    <div class="form-group">
+                        <label>Přihlašovací e-mail (Login):</label>
+                        <input type="text" id="smtp_user" class="form-control" placeholder="vas-email@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Heslo (nebo Heslo aplikace pro Gmail):</label>
+                        <input type="password" id="smtp_password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail příjemce (kam posílat reporty):</label>
+                        <input type="text" id="recipient_email" class="form-control" placeholder="vas-email@gmail.com">
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 10px; align-items: center;">
+                        <input type="checkbox" id="auto_send_email" style="width: 18px; height: 18px;">
+                        <label for="auto_send_email" style="margin: 0; cursor: pointer;">Automaticky posílat denní e-mailový report při kontrole</label>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 25px;">
+                        <button type="submit" class="btn btn-primary">Uložit nastavení</button>
+                        <button type="button" class="btn btn-outline" onclick="testEmail()">Otestovat odeslání e-mailu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
